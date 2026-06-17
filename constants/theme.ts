@@ -29,8 +29,8 @@ export const THEME = {
     background: '#FFFFFF',   // Blanc pur Duolingo
     surface: '#FFFFFF',
     surfaceVariant: '#F7F7F7',
-    onSurface: '#4B4B4B',    // Texte gris foncé Duolingo
-    onSurfaceVariant: '#777777',
+    onSurface: '#000000',    // Noir pur
+    onSurfaceVariant: '#212121', // Anthracite très sombre
     gold: '#FFC800',         // Or Duolingo
     goldMuted: '#E5B700',
     zellige: '#0D9488',

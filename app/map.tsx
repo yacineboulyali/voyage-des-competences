@@ -409,9 +409,9 @@ export default function MapScreen() {
                         <Text style={isLocked ? dynamics.nodeTitleLocked : dynamics.nodeTitle} numberOfLines={1}>
                           {city.city_name_fr}
                         </Text>
-                        <Text style={[isLocked ? dynamics.nodeSubtitleLocked : dynamics.nodeSubtitle, { color: isLocked ? colors.onSurfaceVariant + '40' : (city.city_color || colors.gold) }]}>
-                          {city.city_name_ar}
-                        </Text>
+                        <Text style={[isLocked ? dynamics.nodeSubtitleLocked : dynamics.nodeSubtitle, { color: isLocked ? colors.onSurfaceVariant + '40' : colors.onSurface }]}>
+    {city.city_name_ar}
+  </Text>
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -448,13 +448,13 @@ export default function MapScreen() {
                 <CityIcon iconName={activeChallenge.icon_name} cityId={selectedCityId!} size={s(24)} color={activeColor} />
                 <View>
                   <Text style={dynamics.cardTitle}>{activeChallenge.city_name_fr}</Text>
-                  <Text style={[dynamics.cardSubtitle, { color: activeColor }]}>{activeChallenge.city_name_ar}</Text>
+                  <Text style={[dynamics.cardSubtitle, { color: colors.onSurface }]}>{activeChallenge.city_name_ar}</Text>
                 </View>
               </View>
             </View>
             <View style={[dynamics.pointsBadge, { borderColor: activeColor }]}>
               <Text style={dynamics.pointsLabel}>Points</Text>
-              <Text style={[dynamics.pointsValue, { color: activeColor }]}>450</Text>
+              <Text style={[dynamics.pointsValue, { color: colors.onSurface }]}>450</Text>
             </View>
           </View>
           <Text style={dynamics.cardDesc} numberOfLines={2}>
@@ -519,7 +519,7 @@ const getStyles = (colors: any, s: (v: number) => number, isDark: boolean) => St
   headerSubtitle: {
     fontWeight: 'bold',
     fontSize: s(12),
-    color: colors.gold,
+    color: colors.onSurface,
   },
   progressHeader: {
     flex: 1,

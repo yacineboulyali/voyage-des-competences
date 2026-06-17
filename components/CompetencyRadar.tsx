@@ -10,16 +10,17 @@ import Animated, {
   FadeInUp,
   Easing,
 } from 'react-native-reanimated';
+import { SkillScore } from '../types';
 
 // ─── Animated SVG primitives ───────────────────────────────────────────────
 const AnimatedPolygon = Animated.createAnimatedComponent(Polygon);
 const AnimatedCircle  = Animated.createAnimatedComponent(SVGCircle);
 
 // ─── Data ──────────────────────────────────────────────────────────────────
-export const RADAR_SKILLS = [
-  { name: 'Prise de Décision', value: 78, color: '#2c4e3e' },
-  { name: 'Travail en Équipe', value: 65, color: '#8e4e14' },
-  { name: 'Gestion du Stress', value: 82, color: '#735c00' },
+export const RADAR_SKILLS_DEFAULT = [
+  { skill_label: 'Prise de Décision', score: 78, color: '#2c4e3e' },
+  { skill_label: 'Travail en Équipe', score: 65, color: '#8e4e14' },
+  { skill_label: 'Gestion du Stress', score: 82, color: '#735c00' },
 ];
 
 // ─── Precomputed geometry (viewBox 200×200, centre 100×100, maxR = 84) ─────
@@ -66,9 +67,18 @@ const SkillBar = ({ value, color, delay }: { value: number; color: string; delay
   );
 };
 
+interface CompetencyRadarProps {
+  skills?: SkillScore[];
+}
+
 // ─── Main component ────────────────────────────────────────────────────────
-export const CompetencyRadar: React.FC = () => {
+export const CompetencyRadar: React.FC<CompetencyRadarProps> = ({ skills }) => {
   const progress = useSharedValue(0);
+
+  // We use the first 3 skills, or defaults if not enough data
+  const data = (skills && skills.length >= 3) 
+    ? skills.slice(0, 3) 
+    : RADAR_SKILLS_DEFAULT;
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -81,9 +91,9 @@ export const CompetencyRadar: React.FC = () => {
   const dataProps = useAnimatedProps(() => {
     'worklet';
     const p = progress.value;
-    const r0 = 84 * 0.78 * p;  // Prise de Décision 78%
-    const r1 = 84 * 0.65 * p;  // Travail en Équipe 65%
-    const r2 = 84 * 0.82 * p;  // Gestion du Stress 82%
+    const r0 = 84 * (data[0].score / 100) * p;
+    const r1 = 84 * (data[1].score / 100) * p;
+    const r2 = 84 * (data[2].score / 100) * p;
     return {
       points: [
         `${100},${100 - r0}`,                             // top
@@ -97,19 +107,19 @@ export const CompetencyRadar: React.FC = () => {
   const dot0 = useAnimatedProps(() => {
     'worklet';
     const p = progress.value;
-    const r = 84 * 0.78 * p;
+    const r = 84 * (data[0].score / 100) * p;
     return { cx: 100, cy: 100 - r, r: 4 * Math.min(p * 2.5, 1) };
   });
   const dot1 = useAnimatedProps(() => {
     'worklet';
     const p = progress.value;
-    const r = 84 * 0.65 * p;
+    const r = 84 * (data[1].score / 100) * p;
     return { cx: 100 + r * 0.8660254, cy: 100 + r * 0.5, r: 4 * Math.min(p * 2.5, 1) };
   });
   const dot2 = useAnimatedProps(() => {
     'worklet';
     const p = progress.value;
-    const r = 84 * 0.82 * p;
+    const r = 84 * (data[2].score / 100) * p;
     return { cx: 100 - r * 0.8660254, cy: 100 + r * 0.5, r: 4 * Math.min(p * 2.5, 1) };
   });
 
@@ -139,9 +149,9 @@ export const CompetencyRadar: React.FC = () => {
           />
 
           {/* ← Animated dots */}
-          <AnimatedCircle animatedProps={dot0} fill="#2c4e3e" />
-          <AnimatedCircle animatedProps={dot1} fill="#8e4e14" />
-          <AnimatedCircle animatedProps={dot2} fill="#735c00" />
+          <AnimatedCircle animatedProps={dot0} fill={data[0].color} />
+          <AnimatedCircle animatedProps={dot1} fill={data[1].color} />
+          <AnimatedCircle animatedProps={dot2} fill={data[2].color} />
 
           {/* Center dot */}
           <SVGCircle cx={CX} cy={CY} r={2} fill="#bfc9c1" />
@@ -149,27 +159,27 @@ export const CompetencyRadar: React.FC = () => {
 
         {/* ── Axis labels (absolute, outside SVG) ── */}
         <Text style={[css.label, { top: 6, left: 0, right: 0, textAlign: 'center' }]}>
-          {'PRISE DE\nDÉCISION'}
+          {data[0].skill_label.toUpperCase().replace(' ', '\n')}
         </Text>
         <Text style={[css.label, { bottom: 12, right: 4, textAlign: 'right' }]}>
-          {'TRAVAIL\nEN ÉQUIPE'}
+          {data[1].skill_label.toUpperCase().replace(' ', '\n')}
         </Text>
         <Text style={[css.label, { bottom: 12, left: 4, textAlign: 'left' }]}>
-          {'GESTION\nDU STRESS'}
+          {data[2].skill_label.toUpperCase().replace(' ', '\n')}
         </Text>
       </View>
 
       {/* ── Skill legend with animated progress bars ─────────── */}
       <View style={css.legend}>
-        {RADAR_SKILLS.map((s, i) => (
+        {data.map((s, i) => (
           <Animated.View key={i} entering={FadeInUp.delay(600 + i * 130)} style={css.row}>
             <View style={[css.dot, { backgroundColor: s.color }]} />
             <View style={css.info}>
               <View style={css.rowHeader}>
-                <Text style={[css.skillName, { color: s.color }]}>{s.name}</Text>
-                <Text style={[css.skillPct, { color: s.color }]}>{s.value}%</Text>
+                <Text style={[css.skillName, { color: s.color }]}>{s.skill_label}</Text>
+                <Text style={[css.skillPct, { color: s.color }]}>{s.score}%</Text>
               </View>
-              <SkillBar value={s.value} color={s.color} delay={800 + i * 130} />
+              <SkillBar value={s.score} color={s.color} delay={800 + i * 130} />
             </View>
           </Animated.View>
         ))}

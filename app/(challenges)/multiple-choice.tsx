@@ -121,13 +121,13 @@ export default function V1MultipleChoiceScreen() {
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(100)} style={dynamics.presentationCard}>
             <MaterialIcons name="person" size={s(18)} color={colors.primary} style={{ marginBottom: s(6) }} />
-            <Text style={[dynamics.presentationText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+            <Text style={[dynamics.presentationText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
         )}
         <Animated.View entering={FadeInDown.delay(200)} style={dynamics.header}>
-          <Text style={[dynamics.instruction, { color: colors.onSurfaceVariant }]}>CHOIX MULTIPLE</Text>
-          <Text style={[dynamics.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-          {!!qData.question_ar && <Text style={dynamics.arabicHeader}>{qData.question_ar}</Text>}
+          <Text style={[dynamics.instruction, { color: colors.onSurface }]}>CHOIX MULTIPLE</Text>
+          <Text style={[dynamics.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+          {!!qData.question_ar && <Text style={[dynamics.arabicHeader, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
         </Animated.View>
 
         <View style={dynamics.optionsContainer}>
@@ -230,7 +230,7 @@ const getStyles = (colors: any, s: (v: number) => number) => StyleSheet.create({
   header: { marginBottom: s(24), alignItems: 'center' },
   instruction: { fontSize: s(11), fontWeight: '900', letterSpacing: 2, marginBottom: s(10), opacity: 0.6 },
   questionText: { fontSize: s(20), fontWeight: '800', textAlign: 'center', lineHeight: s(28) },
-  arabicHeader: { fontSize: s(18), textAlign: 'center', marginTop: s(8), color: '#B8860B', fontWeight: '700' },
+  arabicHeader: { fontSize: s(18), textAlign: 'center', marginTop: s(8), color: colors.onSurface, fontWeight: '700' },
   optionsContainer: { gap: s(14) },
   optionCard: { padding: s(18), borderRadius: s(18), borderWidth: 2.5, flexDirection: 'row', alignItems: 'center', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6 },
   optionText: { fontSize: s(15), fontWeight: '600', lineHeight: s(22), flex: 1 },

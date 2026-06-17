@@ -131,11 +131,11 @@ export default function V1ScenarioCascadeScreen() {
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(100)} style={styles.presentationCard}>
             <MaterialIcons name="person" size={18} color={colors.primary} style={{ marginBottom: 6 }} />
-            <Text style={[styles.presentationText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+            <Text style={[styles.presentationText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
         )}
         <Animated.View entering={FadeInDown.delay(200)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>
             SCÉNARIO EN CASCADE {hasSteps ? `(${currentStepIdx + 1}/${steps.length})` : ''}
           </Text>
           <View style={styles.scenarioCard}>
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   scenarioHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 12, gap: 8 },
   scenarioLabel: { fontSize: 11, fontWeight: '900', letterSpacing: 1, opacity: 0.6 },
   scenarioText: { fontSize: 17, fontWeight: '700', lineHeight: 25 },
-  scenarioTextAr: { fontSize: 16, textAlign: 'right', marginTop: 12, color: '#B8860B', fontWeight: '700' },
+  scenarioTextAr: { fontSize: 16, textAlign: 'right', marginTop: 12, color: colors.onSurface, fontWeight: '700' },
   optionsList: { gap: 12 },
   optionItem: { padding: 18, borderRadius: 16, borderWidth: 2, flexDirection: 'row', alignItems: 'center', gap: 12 },
   optionText: { fontSize: 15, fontWeight: '600', lineHeight: 22 },

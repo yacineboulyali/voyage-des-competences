@@ -15,6 +15,11 @@ import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useGameStore } from '../stores/gameStore';
+import { diagnosticService, DiagnosticResult } from '../services/DiagnosticService';
+import { dbService } from '../services/database';
+import { syncCurriculum } from '../services/sync';
+import { Alert, ActivityIndicator } from 'react-native';
+import { useAuthStore } from '../stores/authStore';
 
 const { width } = Dimensions.get('window');
 
@@ -40,10 +45,12 @@ const SettingSection = ({ title, arabicTitle, color, children, styles }: Setting
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
-  const { themeMode, setTheme, colors: COLORS, s } = useTheme();
-  const { uiScale, setUiScale } = useGameStore();
   const [username, setUsername] = useState('Ahmed_AlMaghribi');
   const [language, setLanguage] = useState('fr');
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [lastResult, setLastResult] = useState<DiagnosticResult | null>(null);
+  const { user } = useAuthStore();
   
   const styles = getStyles(COLORS, s);
 
@@ -260,6 +267,113 @@ export default function SettingsScreen() {
           </View>
         </SettingSection>
 
+        {/* Maintenance & Diagnostics */}
+        <SettingSection 
+          title="Maintenance & Diagnostic" 
+          arabicTitle="الصيانة والتشخيص" 
+          color={COLORS.error || '#ea2b2b'}
+          styles={styles}
+        >
+          <View style={styles.maintenanceCard}>
+            <TouchableOpacity 
+              style={[styles.maintenanceBtn, { borderColor: COLORS.outline }]}
+              onPress={async () => {
+                setIsDiagnosing(true);
+                try {
+                  const res = await diagnosticService.performFullCheck();
+                  setLastResult(res);
+                  Alert.alert(
+                    res.status === 'ok' ? "Tout va bien !" : "Diagnostic terminé",
+                    res.status === 'ok' 
+                      ? "Aucun problème majeur détecté." 
+                      : `Détecté : ${res.errors.length} erreur(s). Voir les recommandations.`
+                  );
+                } finally {
+                  setIsDiagnosing(false);
+                }
+              }}
+              disabled={isDiagnosing}
+            >
+              {isDiagnosing ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <MaterialIcons name="health-and-safety" size={24} color={COLORS.primary} />
+              )}
+              <Text style={[styles.maintenanceBtnText, { color: COLORS.onSurface }]}>Analyser l'application</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.maintenanceBtn, { borderColor: COLORS.outline }]}
+              onPress={async () => {
+                setIsSyncing(true);
+                try {
+                  const success = await syncCurriculum(user?.id, true);
+                  Alert.alert(
+                    success ? "Sync réussie" : "Sync partielle",
+                    success ? "Toutes les données sont à jour." : "Certaines données n'ont pas pu être récupérées."
+                  );
+                } finally {
+                  setIsSyncing(false);
+                }
+              }}
+              disabled={isSyncing}
+            >
+              {isSyncing ? (
+                <ActivityIndicator color={COLORS.primary} size="small" />
+              ) : (
+                <MaterialIcons name="sync" size={24} color={COLORS.primary} />
+              )}
+              <Text style={[styles.maintenanceBtnText, { color: COLORS.onSurface }]}>Forcer la synchronisation</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.maintenanceBtn, { borderColor: COLORS.outline }]}
+              onPress={() => {
+                Alert.alert(
+                  "Réinitialisation",
+                  "Voulez-vous vider le cache de synchronisation ? Cela forcera une mise à jour au prochain démarrage.",
+                  [
+                    { text: "Annuler", style: "cancel" },
+                    { text: "Vider", onPress: () => diagnosticService.emergencyCleanUp() }
+                  ]
+                );
+              }}
+            >
+              <MaterialIcons name="sync-disabled" size={24} color={COLORS.gold} />
+              <Text style={[styles.maintenanceBtnText, { color: COLORS.onSurface }]}>Vider le cache de sync</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.maintenanceBtn, { borderColor: COLORS.error, backgroundColor: COLORS.errorContainer + '20' }]}
+              onPress={() => {
+                Alert.alert(
+                  "ZONE DANGEREUSE",
+                  "Voulez-vous réinitialiser TOUTE la base de données locale ? Cette action est irréversible et supprimera votre progression non synchronisée.",
+                  [
+                    { text: "Annuler", style: "cancel" },
+                    { text: "RÉINITIALISER", style: "destructive", onPress: async () => {
+                      await dbService.reset();
+                      router.replace('/accueil');
+                    }}
+                  ]
+                );
+              }}
+            >
+              <MaterialIcons name="delete-forever" size={24} color={COLORS.error} />
+              <Text style={[styles.maintenanceBtnText, { color: COLORS.error }]}>Réinitialiser la base de données</Text>
+            </TouchableOpacity>
+
+            {lastResult && (
+              <View style={[styles.diagnosticSummary, { backgroundColor: COLORS.surfaceVariant }]}>
+                <Text style={[styles.summaryTitle, { color: COLORS.onSurface }]}>Dernier résultat : {lastResult.status.toUpperCase()}</Text>
+                {lastResult.recommendations.map((rec, i) => (
+                  <Text key={i} style={[styles.summaryText, { color: COLORS.onSurfaceVariant }]}>• {rec}</Text>
+                ))}
+              </View>
+            )}
+          </View>
+        </SettingSection>
+
         {/* Save Button */}
         <View style={styles.saveContainer}>
           <TouchableOpacity style={[styles.saveBtn, { backgroundColor: COLORS.primary }]} activeOpacity={0.9}>
@@ -294,7 +408,7 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   headerTitle: {
     fontSize: s(18),
     fontWeight: '900',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
     fontFamily: 'Plus Jakarta Sans',
     letterSpacing: -0.5,
   },
@@ -361,7 +475,7 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   pageTitle: {
     fontSize: s(24),
     fontWeight: '700',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
     fontFamily: 'Plus Jakarta Sans',
     textAlign: 'center',
   },
@@ -398,7 +512,7 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   inputLabelArabic: {
     fontSize: 12,
     fontWeight: '700',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
     opacity: 0.6,
   },
   input: {
@@ -427,12 +541,12 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
   },
   sectionArabic: {
     fontSize: 14,
     fontWeight: '400',
-    color: COLORS.onSurfaceVariant,
+    color: COLORS.onSurface,
     opacity: 0.7,
     marginLeft: 8,
   },
@@ -479,6 +593,35 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: COLORS.onSurfaceVariant,
+  },
+  maintenanceCard: {
+    gap: 12,
+  },
+  maintenanceBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1,
+    gap: 12,
+  },
+  maintenanceBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  diagnosticSummary: {
+    marginTop: 8,
+    padding: 16,
+    borderRadius: 16,
+  },
+  summaryTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    marginBottom: 8,
+  },
+  summaryText: {
+    fontSize: 12,
+    lineHeight: 18,
   },
   saveContainer: {
     marginTop: 20,

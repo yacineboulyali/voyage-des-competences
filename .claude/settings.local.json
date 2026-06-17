@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(claude mcp:*)"
+      "Bash(claude mcp:*)",
+      "Bash(ls -la \"C:\\\\Users\\\\Yacine\\\\Downloads\\\\moukhalafat_v2\" | head -30)"
     ]
   }
 }

@@ -4,13 +4,24 @@
 
 export type CityId = 'casablanca' | 'rabat' | 'marrakech' | 'fes' | 'tanger' | 'chefchaouen';
 
+export interface SkillScore {
+  skill_id: string;
+  skill_label: string;
+  score: number;
+  color: string;
+  icon: string;
+}
+
 export interface UserProfile {
   id: string;
   full_name: string;
+  display_name?: string;
+  avatar_id?: number;
   avatar_url?: string;
   xp: number;
   level: number;
   badges: string[];
+  skills?: SkillScore[];
   created_at: string;
 }
 

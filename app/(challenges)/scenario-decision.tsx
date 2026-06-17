@@ -152,7 +152,7 @@ export default function ScenarioDecisionScreen() {
                <MaterialIcons name="account-circle" size={80} color={colors.primary} />
             </View>
             <View style={styles.bubble}>
-              <Text style={[styles.bubbleText, { color: colors.primary }]}>{currentQ.question_fr}</Text>
+              <Text style={[styles.bubbleText, { color: colors.onSurface }]}>{currentQ.question_fr}</Text>
             </View>
           </Animated.View>
         </View>
@@ -170,8 +170,8 @@ export default function ScenarioDecisionScreen() {
                 disabled={!!selected}
               >
                 <View style={{ flex: 1 }}>
-                  <Text style={[dynamics.choiceTitle, { color: colors.primary }]}>{choice.titre || choice.text_fr || choice.text || choice.texte}</Text>
-                  <Text style={[dynamics.choiceDesc, { color: colors.onSurfaceVariant }]}>{choice.description}</Text>
+                  <Text style={[dynamics.choiceTitle, { color: colors.onSurface }]}>{choice.titre || choice.text_fr || choice.text || choice.texte}</Text>
+                  <Text style={[dynamics.choiceDesc, { color: colors.onSurface }]}>{choice.description}</Text>
                 </View>
                 {selected === choice.id && (
                   <View style={[dynamics.impactBadge, { backgroundColor: choice.score > 70 ? '#4CAF50' : '#FF5252' }]}>

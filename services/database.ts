@@ -564,6 +564,27 @@ class DatabaseService {
       );
     });
   }
+
+  /**
+   * EMERGENCY: Deletes and recreates the entire database.
+   * Use only when everything else fails.
+   */
+  async reset() {
+    return await this.enqueueWrite(async (db) => {
+      console.warn("🚨 EMERGENCY: Resetting database...");
+      await db.execAsync(`
+        DROP TABLE IF EXISTS _migrations;
+        DROP TABLE IF EXISTS user_stats;
+        DROP TABLE IF EXISTS city_progression;
+        DROP TABLE IF EXISTS challenges;
+        DROP TABLE IF EXISTS missions;
+        DROP TABLE IF EXISTS questions;
+        DROP TABLE IF EXISTS app_settings;
+      `);
+      this.db = null;
+      await this.init();
+    });
+  }
 }
 
 export const dbService = new DatabaseService();

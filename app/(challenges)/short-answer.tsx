@@ -162,10 +162,10 @@ export default function ShortAnswerScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.delay(200)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>RÉPONSE COURTE</Text>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>RÉPONSE COURTE</Text>
           <View style={styles.bilingualBox}>
-            <Text style={[styles.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-            {!!qData.question_ar && <Text style={styles.arabicText}>{qData.question_ar}</Text>}
+            <Text style={[styles.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+            {!!qData.question_ar && <Text style={[styles.arabicText, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
           </View>
         </Animated.View>
 
@@ -185,8 +185,8 @@ export default function ShortAnswerScreen() {
           <Animated.View entering={FadeInUp.delay(500)} style={styles.hintBox}>
             <MaterialIcons name="lightbulb-outline" size={20} color={colors.gold} />
             <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={[styles.hintText, { color: colors.onSurfaceVariant }]}>{qData.hint_fr}</Text>
-              {!!qData.hint_ar && <Text style={[styles.hintTextAr, { color: colors.onSurfaceVariant }]}>{qData.hint_ar}</Text>}
+              <Text style={[styles.hintText, { color: colors.onSurface }]}>{qData.hint_fr}</Text>
+              {!!qData.hint_ar && <Text style={[styles.hintTextAr, { color: colors.onSurface }]}>{qData.hint_ar}</Text>}
             </View>
           </Animated.View>
         )}
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   instruction: { fontSize: 12, fontWeight: '900', letterSpacing: 2, marginBottom: 12 },
   bilingualBox: { width: '100%', alignItems: 'center' },
   questionText: { fontSize: 22, fontWeight: '800', textAlign: 'center', marginBottom: 8 },
-  arabicText: { fontSize: 20, textAlign: 'center', color: '#B8860B', fontWeight: '700' },
+  arabicText: { fontSize: 20, textAlign: 'center', color: colors.onSurface, fontWeight: '700' },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',

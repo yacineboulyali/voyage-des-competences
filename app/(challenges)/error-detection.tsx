@@ -147,18 +147,18 @@ export default function ErrorDetectionScreen() {
         {/* Context card */}
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(100)} style={[styles.contextCard, { borderLeftColor: colors.primary }]}>
-            <Text style={[styles.contextLabel, { color: colors.primary }]}>📋 CONTEXTE</Text>
-            <Text style={[styles.contextText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+            <Text style={[styles.contextLabel, { color: colors.onSurface }]}>📋 CONTEXTE</Text>
+            <Text style={[styles.contextText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
         )}
 
         {/* Instruction */}
         <Animated.View entering={FadeInDown.delay(150)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>DÉTECTION D&apos;ERREURS</Text>
-          <Text style={[styles.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>DÉTECTION D&apos;ERREURS</Text>
+          <Text style={[styles.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
           <View style={[styles.countBadge, { backgroundColor: colors.primary + '15' }]}>
             <MaterialIcons name="search" size={14} color={colors.primary} />
-            <Text style={[styles.countText, { color: colors.primary }]}>
+            <Text style={[styles.countText, { color: colors.onSurface }]}>
               Trouvez les {totalCorrect} erreur{totalCorrect > 1 ? 's' : ''}
             </Text>
           </View>

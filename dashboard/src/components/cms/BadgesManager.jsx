@@ -24,9 +24,9 @@ export default function BadgesManager() {
   }
 
   const filteredBadges = badges.filter(b => 
-    b.name_fr?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (b.badge_name || b.name_fr)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     b.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    b.badge_id?.toLowerCase().includes(searchTerm.toLowerCase())
+    (b.id || b.badge_id)?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getRankEmoji = (rank) => {
@@ -62,10 +62,10 @@ export default function BadgesManager() {
           <div className="empty-state">Aucun badge ne correspond à votre recherche.</div>
         ) : (
           filteredBadges.map((badge) => (
-            <div key={badge.badge_id} className="badge-definition-card">
+            <div key={badge.id || badge.badge_id} className="badge-definition-card">
               <div className="badge-image-container" style={{ background: badge.city === 'rabat' ? 'linear-gradient(135deg, #7c2d12 0%, #451a03 100%)' : '' }}>
                 {badge.image_url ? (
-                  <img src={badge.image_url} alt={badge.name_fr} className="badge-img" />
+                  <img src={badge.image_url} alt={badge.badge_name || badge.name_fr} className="badge-img" />
                 ) : (
                   <div className="badge-placeholder">
                     <Award size={40} opacity={0.3} />
@@ -79,11 +79,11 @@ export default function BadgesManager() {
 
               <div className="badge-info">
                 <div className="badge-header">
-                  <h4>{badge.name_fr}</h4>
-                  <span className="badge-id">#{badge.badge_id}</span>
+                  <h4>{badge.badge_name || badge.name_fr}</h4>
+                  <span className="badge-id">#{badge.id?.slice(0, 8) || badge.badge_id}</span>
                 </div>
                 
-                <p className="badge-description">{badge.description || "Aucune description"}</p>
+                <p className="badge-description">{badge.description_fr || badge.description || "Aucune description"}</p>
                 
                 <div className="badge-meta">
                   <div className="meta-item">
@@ -97,11 +97,11 @@ export default function BadgesManager() {
                 </div>
 
                 <div className="badge-condition">
-                  <strong>Condition :</strong> {badge.condition_text || "Non définie"}
+                  <strong>Condition :</strong> {badge.requirement || badge.condition_text || "Non définie"}
                 </div>
 
                 <div className="badge-points">
-                  <Award size={14} /> {badge.points} points
+                  <Award size={14} /> {badge.points || 0} points
                 </div>
               </div>
 

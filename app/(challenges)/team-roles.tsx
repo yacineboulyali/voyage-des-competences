@@ -165,7 +165,7 @@ export default function TeamRolesScreen() {
       <View style={styles.content}>
         <View style={styles.sectionTitleContainer}>
           <Text style={[styles.sectionTitle, { color: colors.onSurface }]}>{qData?.question_fr || "TRAVAIL D'ÉQUIPE"}</Text>
-          <Text style={[styles.sectionSubtitle, { color: colors.onSurfaceVariant }]}>Assignez le bon expert à chaque tâche</Text>
+          <Text style={[styles.sectionSubtitle, { color: colors.onSurface }]}>Assignez le bon expert à chaque tâche</Text>
         </View>
 
         <View style={styles.tasksContainer}>
@@ -215,7 +215,7 @@ export default function TeamRolesScreen() {
                 <MaterialIcons name="person" size={24} color="#fff" />
               </View>
               <Text style={[styles.memberName, { color: colors.onSurface }]}>{member.name}</Text>
-              <Text style={[styles.memberRole, { color: colors.onSurfaceVariant }]}>{member.role}</Text>
+              <Text style={[styles.memberRole, { color: colors.onSurface }]}>{member.role}</Text>
             </TouchableOpacity>
           ))}
         </View>

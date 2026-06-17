@@ -33,7 +33,7 @@ const PrincipleItem = ({ icon, title, arabicTitle, delay, colors: COLORS, styles
       <MaterialIcons name={icon} size={s(28)} color={COLORS.gold || '#cca72f'} />
     </View>
     <View style={styles.principleTextContainer}>
-      <Text style={[styles.principleTitle, { color: COLORS.primary }]}>{title}</Text>
+      <Text style={[styles.principleTitle, { color: COLORS.onSurface }]}>{title}</Text>
       <Text style={[styles.principleArabic, { color: COLORS.onSurfaceVariant }]}>{arabicTitle}</Text>
     </View>
   </Animated.View>
@@ -113,14 +113,14 @@ export default function PedagoScreen() {
             <View style={styles.expertHeader}>
               <View style={[styles.vLine, { backgroundColor: cityColor }]} />
               <View>
-                <Text style={[styles.expertName, { color: COLORS.primary }]}>{cityData?.city_name_fr || 'Rabat'} : Objectifs</Text>
+                <Text style={[styles.expertName, { color: COLORS.onSurface }]}>{cityData?.city_name_fr || 'Rabat'} : Objectifs</Text>
                 <Text style={[styles.expertTitle, { color: COLORS.onSurfaceVariant }]}>Préparez votre voyage de compétences</Text>
               </View>
             </View>
             
             <View style={[styles.quoteCard, { backgroundColor: COLORS.surface }]}>
               <MaterialIcons name="info" size={s(32)} color={cityColor} style={styles.quoteIcon} />
-              <Text style={[styles.quoteText, { color: COLORS.primary }]}>
+              <Text style={[styles.quoteText, { color: COLORS.onSurface }]}>
                 {cityData?.description_fr || "Découvrez les secrets de cette ville à travers des missions culturelles et professionnelles."}
               </Text>
             </View>
@@ -138,7 +138,7 @@ export default function PedagoScreen() {
                   <View key={mission.id} style={[styles.analysisRow, idx > 0 && { marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: COLORS.border }]}>
                     <View style={[styles.statusDot, { backgroundColor: cityColor }]} />
                     <View style={{ flex: 1 }}>
-                      <Text style={[styles.analysisOption, { color: COLORS.primary }]}>{mission.title_fr}</Text>
+                      <Text style={[styles.analysisOption, { color: COLORS.onSurface }]}>{mission.title_fr}</Text>
                       <Text style={[styles.analysisResult, { color: COLORS.onSurfaceVariant }]}>
                         {mission.description_fr || "Relevez le défi pour maîtriser cette facette du patrimoine."}
                       </Text>
@@ -163,7 +163,7 @@ export default function PedagoScreen() {
                 {cityData.learning_outcomes.map((outcome, idx) => (
                   <View key={idx} style={[styles.outcomeRow, idx > 0 && { marginTop: s(12) }]}>
                     <MaterialIcons name="check-circle" size={s(18)} color={cityColor} />
-                    <Text style={[styles.outcomeText, { color: COLORS.primary }]}>{outcome}</Text>
+                    <Text style={[styles.outcomeText, { color: COLORS.onSurface }]}>{outcome}</Text>
                   </View>
                 ))}
               </View>
@@ -266,11 +266,11 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   expertName: {
     fontSize: s(20),
     fontWeight: '800',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
   },
   expertTitle: {
     fontSize: s(14),
-    color: COLORS.onSurfaceVariant,
+    color: COLORS.onSurface,
     fontWeight: '500',
   },
   quoteCard: {
@@ -293,7 +293,7 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   quoteText: {
     fontSize: s(18),
     fontStyle: 'italic',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
     lineHeight: s(28),
     textAlign: 'center',
     fontWeight: '600',
@@ -330,12 +330,12 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   analysisOption: {
     fontSize: s(15),
     fontWeight: '700',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
     flex: 1,
   },
   analysisResult: {
     fontSize: s(14),
-    color: COLORS.onSurfaceVariant,
+    color: COLORS.onSurface,
     lineHeight: s(22),
     paddingLeft: 0,
     marginTop: s(4),
@@ -384,11 +384,11 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   principleTitle: {
     fontSize: s(16),
     fontWeight: '700',
-    color: COLORS.primary,
+    color: COLORS.onSurface,
   },
   principleArabic: {
     fontSize: s(14),
-    color: COLORS.onSurfaceVariant,
+    color: COLORS.onSurface,
     opacity: 0.6,
   },
   bottomBar: {
@@ -421,7 +421,7 @@ const getStyles = (COLORS: any, s: (v: number) => number) => StyleSheet.create({
   },
   emptyText: {
     fontSize: s(14),
-    color: COLORS.onSurfaceVariant,
+    color: COLORS.onSurface,
     opacity: 0.6,
     fontStyle: 'italic',
     textAlign: 'center',

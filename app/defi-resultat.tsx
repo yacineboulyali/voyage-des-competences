@@ -414,7 +414,7 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '900',
-    color: colors.primary,
+    color: colors.onSurface,
     textAlign: 'center',
   },
   subtitle: {
@@ -530,17 +530,17 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   nameMain: {
     fontSize: 18,
     fontWeight: '800',
-    color: colors.primary,
+    color: colors.onSurface,
   },
   participantXP: {
     fontSize: 12,
-    color: colors.onSurfaceVariant,
-    opacity: 0.7,
+    color: colors.onSurface,
+    opacity: 0.8,
   },
   participantXPMain: {
     fontSize: 14,
     fontWeight: '700',
-    color: colors.gold,
+    color: colors.onSurface,
   },
   crownIcon: {
     position: 'absolute',
@@ -553,7 +553,7 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: colors.primary,
+    color: colors.onSurface,
     marginBottom: 16,
   },
   sectionArabic: {
@@ -586,12 +586,12 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   rewardVal: {
     fontSize: 18,
     fontWeight: '900',
-    color: colors.primary,
+    color: colors.onSurface,
   },
   rewardLabel: {
     fontSize: 12,
-    color: colors.onSurfaceVariant,
-    opacity: 0.8,
+    color: colors.onSurface,
+    opacity: 0.9,
     textAlign: 'center',
     marginTop: 4,
   },
@@ -619,7 +619,7 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   skillPercent: {
     fontSize: 14,
     fontWeight: '800',
-    color: colors.primary,
+    color: colors.onSurface,
   },
   progressBg: {
     height: 10,
@@ -665,8 +665,8 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   secondaryBtnText: {
     fontSize: 16,
     fontWeight: '700',
-    color: colors.onSurfaceVariant,
-    opacity: 0.7,
+    color: colors.onSurface,
+    opacity: 0.8,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -689,7 +689,8 @@ const getStyles = (colors: any, isDark: boolean) => StyleSheet.create({
   statLabel: {
     fontSize: 10,
     fontWeight: '700',
-    opacity: 0.6,
+    color: colors.onSurface,
+    opacity: 0.8,
     textTransform: 'uppercase',
   },
   retryBtn: {

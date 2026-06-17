@@ -11,6 +11,8 @@ import { AVATARS } from '../constants/Avatars';
 import { BADGES } from '../constants/Badges';
 import { useAuthStore } from '../stores/authStore';
 import { useGameStore } from '../stores/gameStore';
+import { ProfileService } from '../services/ProfileService';
+import { DEMO_PLAYER_ID } from '../lib/supabase';
 
 const { width } = Dimensions.get('window');
 
@@ -22,7 +24,19 @@ export default function ProfilClassiqueScreen() {
   const { colors: COLORS, uiScale, s } = useTheme();
   const setUiScale = useGameStore((state) => state.setUiScale);
 
+  React.useEffect(() => {
+    // S'assurer qu'on a les données réelles au chargement
+    const userId = user?.id || DEMO_PLAYER_ID;
+    ProfileService.fetchFullProfile(userId);
+  }, []);
+
   const styles = getStyles(COLORS, s);
+  
+  // Utilisation des données réelles ou fallback
+  const displayName = user?.full_name || 'Voyageur';
+  const userLevel = user?.level || 1;
+  const userXP = user?.xp || 0;
+  const userSkills = user?.skills || [];
 
   return (
     <View style={[styles.container, { paddingTop: insets.top, backgroundColor: COLORS.background }]}>
@@ -55,11 +69,11 @@ export default function ProfilClassiqueScreen() {
               />
             </View>
             <View style={[styles.levelBadge, { backgroundColor: COLORS.gold, borderColor: COLORS.background }]}>
-              <Text style={[styles.levelBadgeText, { color: COLORS.white }]}>NIVEAU 12</Text>
+              <Text style={[styles.levelBadgeText, { color: COLORS.white }]}>NIVEAU {userLevel}</Text>
             </View>
           </View>
-          <Text style={[styles.profileName, { color: COLORS.primary }]}>Amine Mansouri</Text>
-          <Text style={[styles.profileRole, { color: COLORS.onSurfaceVariant }]}>Explorateur de Savoir</Text>
+          <Text style={[styles.profileName, { color: COLORS.onSurface }]}>{displayName}</Text>
+          <Text style={[styles.profileRole, { color: COLORS.onSurfaceVariant }]}>{userXP} XP • Explorateur de Savoir</Text>
         </Animated.View>
 
         {/* Soft Skills Radar Card */}
@@ -68,18 +82,18 @@ export default function ProfilClassiqueScreen() {
             <MaterialIcons name="architecture" size={s(60)} color={COLORS.primary} style={styles.bgIcon} />
             <View style={styles.cardTitleRow}>
               <MaterialIcons name="psychology" size={s(24)} color={COLORS.primary} />
-              <Text style={[styles.cardTitle, { color: COLORS.primary }]}>Majlis des Soft Skills</Text>
+              <Text style={[styles.cardTitle, { color: COLORS.onSurface }]}>Majlis des Soft Skills</Text>
             </View>
 
-            {/* Animated 3-axis radar */}
-            <CompetencyRadar />
+            {/* Animated 3-axis radar with real data */}
+            <CompetencyRadar skills={userSkills} />
           </View>
         </Animated.View>
 
         {/* Horizontal Badge Gallery */}
         <Animated.View entering={FadeInUp.delay(300)} style={styles.badgesSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={[styles.sectionTitle, { color: COLORS.primary }]}>Coffre aux Bijoux</Text>
+            <Text style={[styles.sectionTitle, { color: COLORS.onSurface }]}>Coffre aux Bijoux</Text>
             <TouchableOpacity onPress={() => router.push('/badges')}>
               <Text style={[styles.seeAllText, { color: COLORS.accent }]}>VOIR TOUT</Text>
             </TouchableOpacity>
@@ -117,7 +131,7 @@ export default function ProfilClassiqueScreen() {
           <View style={[styles.leaderboardCard, { backgroundColor: COLORS.surfaceVariant }]}>
             <View style={styles.cardTitleRow}>
               <MaterialIcons name="groups" size={s(24)} color={COLORS.primary} />
-              <Text style={[styles.cardTitle, { color: COLORS.primary }]}>Cercle Familial</Text>
+              <Text style={[styles.cardTitle, { color: COLORS.onSurface }]}>Cercle Familial</Text>
             </View>
 
             <View style={styles.leaderboardList}>
@@ -138,11 +152,11 @@ export default function ProfilClassiqueScreen() {
                   <Text style={[styles.lbRankActive, { color: COLORS.primaryLight }]}>2</Text>
                   <Image source={AVATARS.explorer} style={[styles.lbAvatar, { borderColor: COLORS.primaryLight }]} />
                   <View>
-                    <Text style={[styles.lbNameActive, { color: COLORS.white }]}>Moi (Amine)</Text>
+                    <Text style={[styles.lbNameActive, { color: COLORS.white }]}>Moi ({displayName})</Text>
                     <Text style={[styles.lbRoleActive, { color: COLORS.primaryLight }]}>En pleine ascension</Text>
                   </View>
                 </View>
-                <Text style={[styles.lbScoreActive, { color: COLORS.white }]}>4210 XP</Text>
+                <Text style={[styles.lbScoreActive, { color: COLORS.white }]}>{userXP} XP</Text>
               </View>
 
               <View style={[styles.lbItem, { backgroundColor: COLORS.surface }]}>
@@ -165,7 +179,7 @@ export default function ProfilClassiqueScreen() {
           <View style={[styles.scaleCard, { backgroundColor: COLORS.surfaceVariant }]}>
             <View style={styles.cardTitleRow}>
               <MaterialIcons name="format-size" size={s(24)} color={COLORS.primary} />
-              <Text style={[styles.cardTitle, { color: COLORS.primary }]}>Taille du jeu</Text>
+              <Text style={[styles.cardTitle, { color: COLORS.onSurface }]}>Taille du jeu</Text>
             </View>
             <View style={styles.scaleOptions}>
               {[

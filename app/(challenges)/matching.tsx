@@ -167,16 +167,16 @@ export default function V1MatchingScreen() {
         {/* Context */}
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(80)} style={[styles.contextCard, { borderLeftColor: colors.primary }]}>
-            <Text style={[styles.contextLabel, { color: colors.primary }]}>📋 CONTEXTE</Text>
-            <Text style={[styles.contextText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+            <Text style={[styles.contextLabel, { color: colors.onSurface }]}>📋 CONTEXTE</Text>
+            <Text style={[styles.contextText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
         )}
 
         {/* Instruction */}
         <Animated.View entering={FadeInDown.delay(150)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>ASSOCIATION</Text>
-          <Text style={[styles.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-          <Text style={[styles.hint, { color: colors.onSurfaceVariant }]}>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>ASSOCIATION</Text>
+          <Text style={[styles.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+          <Text style={[styles.hint, { color: colors.onSurface }]}>
             Tapez un élément <MaterialIcons name="arrow-right-alt" size={14} /> puis sa catégorie
           </Text>
         </Animated.View>

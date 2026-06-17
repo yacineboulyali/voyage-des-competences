@@ -446,18 +446,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#1A1A2E',
+    color: colors.onSurface,
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 4,
   },
   description: {
     fontSize: 12,
-    color: '#616161',
+    color: colors.onSurface,
     textAlign: 'center',
     lineHeight: 18,
     paddingHorizontal: 10,
     marginBottom: 12,
+    opacity: 0.8,
   },
   acteTitle: {
     fontSize: 12,
@@ -542,9 +543,9 @@ const styles = StyleSheet.create({
   missionsTitle: {
     fontSize: 10.5,
     fontWeight: 'bold',
-    color: '#1A1A2E',
+    color: colors.onSurface,
     marginBottom: 10,
-    opacity: 0.5,
+    opacity: 0.6,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },

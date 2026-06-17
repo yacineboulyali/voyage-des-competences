@@ -114,7 +114,7 @@ export default function FamilySetupScreen() {
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} hitSlop={{top:10, bottom:10, left:10, right:10}}>
               <MaterialIcons name="arrow-back" size={24} color={colors.primary} />
             </TouchableOpacity>
-            <Text style={[styles.topNavTitle, { color: colors.primary }]}>Configuration</Text>
+            <Text style={[styles.topNavTitle, { color: colors.onSurface }]}>Configuration</Text>
             <View style={{ width: 40 }} />
           </View>
 
@@ -124,7 +124,7 @@ export default function FamilySetupScreen() {
           >
             <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
               <Text style={[styles.title, { color: colors.onSurface }]}>Crée ta Famille</Text>
-              <Text style={[styles.arabicHeader, { color: colors.primary }]}>أنشئ عائلتك</Text>
+              <Text style={[styles.arabicHeader, { color: colors.onSurface }]}>أنشئ عائلتك</Text>
               <Text style={[styles.subtitle, { color: colors.onSurfaceVariant }]}>
                 Personnalisez votre identité de groupe pour ce voyage à travers le Maroc.
               </Text>
@@ -132,7 +132,7 @@ export default function FamilySetupScreen() {
 
             <Animated.View entering={FadeInDown.delay(200).duration(600)} style={styles.section}>
               <View style={styles.labelRow}>
-                <Text style={[styles.label, { color: colors.primary }]}>Nom de la Famille</Text>
+                <Text style={[styles.label, { color: colors.onSurface }]}>Nom de la Famille</Text>
                 <Text style={styles.arabicLabel}>اسم العائلة</Text>
               </View>
               <View style={[styles.inputWrapper, { backgroundColor: colors.surface, borderColor: colors.border }]}>
@@ -151,7 +151,7 @@ export default function FamilySetupScreen() {
 
             <Animated.View entering={FadeInDown.delay(400).duration(600)} style={styles.section}>
               <View style={styles.labelRow}>
-                <Text style={[styles.label, { color: colors.primary }]}>Ton Rôle dans l&apos;Aventure</Text>
+                <Text style={[styles.label, { color: colors.onSurface }]}>Ton Rôle dans l&apos;Aventure</Text>
                 <Text style={styles.arabicLabel}>دورك في المغامرة</Text>
               </View>
               <View style={styles.rolesGrid}>
@@ -184,13 +184,13 @@ export default function FamilySetupScreen() {
                     </View>
                     <Text style={[
                       styles.roleLabel, 
-                      { color: selectedRole === role.id ? colors.primary : colors.onSurface }
+                      { color: selectedRole === role.id ? colors.onSurface : colors.onSurface }
                     ]}>
                       {role.label}
                     </Text>
                     <Text style={[
                       styles.roleLabelAr, 
-                      { color: selectedRole === role.id ? colors.primary : colors.outline }
+                      { color: selectedRole === role.id ? colors.onSurface : colors.outline }
                     ]}>
                       {role.labelAr}
                     </Text>

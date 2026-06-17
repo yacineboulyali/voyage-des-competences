@@ -146,7 +146,7 @@ export default function ScenarioDialogueScreen() {
           <Animated.View entering={FadeInDown.delay(100)} style={[styles.contextBubble, { backgroundColor: colors.surface, borderColor: colors.primary + '20' }]}>
             <View style={[styles.contextHeader, { backgroundColor: colors.primary + '15' }]}>
               <MaterialIcons name="movie" size={16} color={colors.primary} />
-              <Text style={[styles.contextLabel, { color: colors.primary }]}>SITUATION</Text>
+              <Text style={[styles.contextLabel, { color: colors.onSurface }]}>SITUATION</Text>
             </View>
             <Text style={[styles.contextText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
@@ -165,7 +165,7 @@ export default function ScenarioDialogueScreen() {
                   { backgroundColor: d.character === 'Ishaq' ? colors.primary + '15' : colors.surface }
                 ]}
               >
-                <Text style={[styles.characterName, { color: colors.primary }]}>{d.character}</Text>
+                <Text style={[styles.characterName, { color: colors.onSurface }]}>{d.character}</Text>
                 <Text style={[styles.dialogueText, { color: colors.onSurface }]}>{d.text || d.text_fr}</Text>
               </Animated.View>
             ))}
@@ -177,8 +177,8 @@ export default function ScenarioDialogueScreen() {
           <View style={styles.qIcon}>
             <MaterialIcons name="chat" size={22} color={colors.primary} />
           </View>
-          <Text style={[styles.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-          {!!qData.question_ar && <Text style={styles.questionAr}>{qData.question_ar}</Text>}
+          <Text style={[styles.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+          {!!qData.question_ar && <Text style={[styles.questionAr, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
         </Animated.View>
 
         {/* Options */}
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   questionCard: { borderRadius: 20, borderWidth: 1.5, borderLeftWidth: 5, borderLeftColor: '#cca72f', padding: 20, marginBottom: 22, elevation: 2 },
   qIcon: { marginBottom: 10 },
   questionText: { fontSize: 17, fontWeight: '800', lineHeight: 25 },
-  questionAr: { fontSize: 16, textAlign: 'right', marginTop: 10, color: '#B8860B', fontWeight: '700' },
+  questionAr: { fontSize: 16, textAlign: 'right', marginTop: 10, color: colors.onSurface, fontWeight: '700' },
   // Options
   optionsList: { gap: 12 },
   optionCard: {

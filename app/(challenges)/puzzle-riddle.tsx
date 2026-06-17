@@ -151,7 +151,7 @@ export default function V1PuzzleRiddleScreen() {
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(100)} style={styles.presentationCard}>
             <MaterialIcons name="person" size={18} color={colors.primary} style={{ marginBottom: 6 }} />
-            <Text style={[styles.presentationText, { color: colors.onSurfaceVariant }]}>
+            <Text style={[styles.presentationText, { color: colors.onSurface }]}>
               {qData.presentation_fr}
             </Text>
           </Animated.View>
@@ -159,11 +159,11 @@ export default function V1PuzzleRiddleScreen() {
 
         {/* Riddle card */}
         <Animated.View entering={FadeInDown.delay(200)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>ÉNIGME & MYSTÈRE</Text>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>ÉNIGME & MYSTÈRE</Text>
           <View style={styles.riddleBox}>
             <MaterialIcons name="help-outline" size={32} color={colors.gold ?? '#cca72f'} style={{ marginBottom: 16 }} />
-            <Text style={[styles.riddleText, { color: colors.primary }]}>{qData.question_fr}</Text>
-            {!!qData.question_ar && <Text style={styles.riddleTextAr}>{qData.question_ar}</Text>}
+            <Text style={[styles.riddleText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+            {!!qData.question_ar && <Text style={[styles.riddleTextAr, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
           </View>
         </Animated.View>
 
@@ -215,7 +215,7 @@ export default function V1PuzzleRiddleScreen() {
             {!!qData.hint_fr && (
               <View style={styles.hintContainer}>
                 <Text style={[styles.hintLabel, { color: colors.gold ?? '#cca72f' }]}>INDICE</Text>
-                <Text style={[styles.hintContent, { color: colors.onSurfaceVariant }]}>{qData.hint_fr}</Text>
+                <Text style={[styles.hintContent, { color: colors.onSurface }]}>{qData.hint_fr}</Text>
               </View>
             )}
           </>
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   riddleText: { fontSize: 19, fontWeight: '800', textAlign: 'center', lineHeight: 27 },
-  riddleTextAr: { fontSize: 17, textAlign: 'center', marginTop: 12, color: '#B8860B', fontWeight: '700' },
+  riddleTextAr: { fontSize: 17, textAlign: 'center', marginTop: 12, color: colors.onSurface, fontWeight: '700' },
   // QCM
   optionsList: { gap: 12 },
   optionItem: {

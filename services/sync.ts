@@ -81,13 +81,13 @@ export async function syncPlayerProgress(userId: string) {
  * Populates SQLite with challenges, missions, and questions.
  * Handles each step independently to allow partial success.
  */
-export async function syncCurriculum(userId?: string) {
+export async function syncCurriculum(userId?: string, force: boolean = false) {
   console.log('🔄 Checking curriculum sync status...');
   
   // Anti-flooding: Only sync once every 10 minutes unless forced
   const lastSync = await dbService.getLastSync();
   const now = Date.now();
-  if (now - lastSync < 10 * 60 * 1000) {
+  if (!force && now - lastSync < 10 * 60 * 1000) {
     console.log('⏳ Sync skipped: recently updated.');
     return true;
   }

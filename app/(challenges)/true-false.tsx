@@ -116,13 +116,13 @@ export default function V1TrueFalseScreen() {
         {!!qData.presentation_fr && (
           <Animated.View entering={FadeInDown.delay(100)} style={dynamics.presentationCard}>
             <MaterialIcons name="person" size={s(18)} color={colors.primary} style={{ marginBottom: s(6) }} />
-            <Text style={[dynamics.presentationText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+            <Text style={[dynamics.presentationText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
           </Animated.View>
         )}
         <Animated.View entering={FadeInDown.delay(200)} style={dynamics.header}>
-          <Text style={[dynamics.instruction, { color: colors.onSurfaceVariant }]}>VRAI OU FAUX</Text>
-          <Text style={[dynamics.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-          {!!qData.question_ar && <Text style={dynamics.arabicHeader}>{qData.question_ar}</Text>}
+          <Text style={[dynamics.instruction, { color: colors.onSurface }]}>VRAI OU FAUX</Text>
+          <Text style={[dynamics.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+          {!!qData.question_ar && <Text style={[dynamics.arabicHeader, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
         </Animated.View>
 
         <View style={dynamics.optionsWrapper}>
@@ -219,7 +219,7 @@ const getStyles = (colors: any, s: (v: number) => number) => StyleSheet.create({
   header: { marginBottom: s(36), alignItems: 'center' },
   instruction: { fontSize: s(11), fontWeight: '900', letterSpacing: 2, marginBottom: s(14), opacity: 0.6 },
   questionText: { fontSize: s(22), fontWeight: '800', textAlign: 'center', lineHeight: s(30) },
-  arabicHeader: { fontSize: s(20), textAlign: 'center', marginTop: s(12), color: '#B8860B', fontWeight: '700' },
+  arabicHeader: { fontSize: s(20), textAlign: 'center', marginTop: s(12), color: colors.onSurface, fontWeight: '700' },
   optionsWrapper: { flexDirection: 'row', gap: s(20), justifyContent: 'center' },
   choiceBtn: { flex: 1, height: s(180), borderRadius: s(24), borderWidth: 2, borderColor: 'rgba(0,0,0,0.05)', backgroundColor: 'rgba(0,0,0,0.01)', alignItems: 'center', justifyContent: 'center', elevation: 2 },
   iconCircle: { width: s(64), height: s(64), borderRadius: s(32), alignItems: 'center', justifyContent: 'center', marginBottom: s(12) },

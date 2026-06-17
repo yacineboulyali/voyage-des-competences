@@ -170,8 +170,8 @@ export default function BadgesPage() {
                       <tr key={b.id}>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                            <span style={{ fontSize: 20 }}>{b.badge_emoji || '🏅'}</span>
-                            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{b.badge_name_fr}</span>
+                            <span style={{ fontSize: 20 }}>{b.icon_url || b.badge_emoji || '🏅'}</span>
+                            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{b.badge_name || b.badge_name_fr}</span>
                           </div>
                         </td>
                         <td>{b.city || '—'}</td>

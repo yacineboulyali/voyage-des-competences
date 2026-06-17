@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: THEME.light.primary,
+    color: THEME.light.onSurface,
     marginBottom: 8,
   },
   subtitle: {
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: THEME.light.primary,
+    color: THEME.light.onSurface,
     marginLeft: 4,
   },
   inputWrapper: {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     color: THEME.light.onSurfaceVariant,
   },
   registerLinkBold: {
-    color: THEME.light.primary,
+    color: THEME.light.onSurface,
     fontWeight: '700',
   },
   testAccounts: {
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(44, 78, 62, 0.1)',
   },
   testBadgeText: {
-    color: THEME.light.primary,
+    color: THEME.light.onSurface,
     fontWeight: '700',
     fontSize: 14,
   },

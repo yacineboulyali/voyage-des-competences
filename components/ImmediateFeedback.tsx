@@ -53,6 +53,16 @@ export const ImmediateFeedback: React.FC<ImmediateFeedbackProps> = ({
         }
       ]}
     >
+      {onClose && (
+        <TouchableOpacity 
+          onPress={onClose} 
+          style={dynamics.closeBtn}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
+          <MaterialIcons name="close" size={s(20)} color={textColor} style={{ opacity: 0.6 }} />
+        </TouchableOpacity>
+      )}
+
       <View style={dynamics.content}>
         <View style={dynamics.header}>
           <MaterialIcons 
@@ -63,16 +73,6 @@ export const ImmediateFeedback: React.FC<ImmediateFeedbackProps> = ({
           <Text style={[dynamics.title, { color: textColor }]}>
             {isCorrect ? "Excellent !" : "Presque !"}
           </Text>
-          
-          {onClose && (
-            <TouchableOpacity 
-              onPress={onClose} 
-              style={dynamics.closeBtn}
-              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-            >
-              <MaterialIcons name="close" size={s(24)} color={textColor} opacity={0.6} />
-            </TouchableOpacity>
-          )}
         </View>
         
         <Text style={[dynamics.message, { color: textColor }]}>
@@ -89,7 +89,7 @@ const getStyles = (s: (v: number) => number) => StyleSheet.create({
   container: {
     position: 'absolute',
     bottom: 0,
-    width: width,
+    width: '100%',
     paddingHorizontal: s(24),
     paddingTop: s(24),
     zIndex: 2000,
@@ -124,8 +124,9 @@ const getStyles = (s: (v: number) => number) => StyleSheet.create({
   },
   closeBtn: {
     position: 'absolute',
-    right: s(-8),
-    top: s(-4),
+    right: s(12),
+    top: s(12),
     padding: s(8),
+    zIndex: 10,
   }
 });

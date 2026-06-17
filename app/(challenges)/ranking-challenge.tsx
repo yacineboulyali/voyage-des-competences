@@ -163,13 +163,13 @@ export default function V1RankingScreen() {
             <View style={styles.header}>
               {!!qData.presentation_fr && (
                 <Animated.View entering={FadeInDown.delay(100)} style={styles.presentationCard}>
-                  <Text style={[styles.presentationText, { color: colors.onSurfaceVariant }]}>{qData.presentation_fr}</Text>
+                  <Text style={[styles.presentationText, { color: colors.onSurface }]}>{qData.presentation_fr}</Text>
                 </Animated.View>
               )}
               <Animated.View entering={FadeInDown.delay(200)} style={{ alignItems: 'center', marginBottom: 20 }}>
-                <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>CLASSEMENT / ORDRE</Text>
-                <Text style={[styles.questionText, { color: colors.primary }]}>{qData.question_fr}</Text>
-                {!!qData.question_ar && <Text style={styles.arabicHeader}>{qData.question_ar}</Text>}
+                <Text style={[styles.instruction, { color: colors.onSurface }]}>CLASSEMENT / ORDRE</Text>
+                <Text style={[styles.questionText, { color: colors.onSurface }]}>{qData.question_fr}</Text>
+                {!!qData.question_ar && <Text style={[styles.arabicHeader, { color: colors.onSurface }]}>{qData.question_ar}</Text>}
               </Animated.View>
             </View>
           }
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   presentationText: { fontSize: 13, lineHeight: 19, fontStyle: 'italic' },
   instruction: { fontSize: 11, fontWeight: '900', letterSpacing: 2, marginBottom: 8, opacity: 0.6 },
   questionText: { fontSize: 18, fontWeight: '800', textAlign: 'center', lineHeight: 26 },
-  arabicHeader: { fontSize: 17, textAlign: 'center', marginTop: 6, color: '#B8860B', fontWeight: '700' },
+  arabicHeader: { fontSize: 17, textAlign: 'center', marginTop: 6, color: colors.onSurface, fontWeight: '700' },
   listContainer: { flex: 1, paddingHorizontal: 24 },
   rowItem: { flexDirection: 'row', alignItems: 'center', padding: 18, borderRadius: 18, borderWidth: 2, marginBottom: 12, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4 },
   itemText: { fontSize: 15, fontWeight: '600', lineHeight: 22 },

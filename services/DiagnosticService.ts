@@ -19,8 +19,11 @@ export interface DiagnosticResult {
     auth: boolean;
     profile: boolean;
     curriculum: boolean;
+    consistency: boolean;
+    sync: boolean;
   };
   errors: string[];
+  recommendations: string[];
 }
 
 export class DiagnosticService {
@@ -55,20 +58,44 @@ export class DiagnosticService {
         auth: false,
         profile: false,
         curriculum: false,
+        consistency: false,
+        sync: false,
       },
-      errors: []
+      errors: [],
+      recommendations: []
     };
 
-    // 1. Vérification Base de données Locale
+    // 1. Base de données
+    await this.checkDatabase(result);
+
+    // 2. Réseau
+    await this.checkNetwork(result);
+
+    // 3. Auth & Profil
+    await this.checkAuthAndProfile(result);
+
+    // 4. Curriculum & Cohérence
+    await this.checkCurriculumAndConsistency(result);
+
+    // 5. Synchronisation
+    await this.checkSyncStaleness(result);
+
+    this.reportToTerminal(result);
+    return result;
+  }
+
+  private async checkDatabase(result: DiagnosticResult) {
     try {
-      const isDbReady = await dbService.init();
+      await dbService.init();
       result.checks.database = true;
     } catch (e: any) {
       result.errors.push(`DB_LOCAL_ERROR: ${e.message}`);
       result.status = 'error';
+      result.recommendations.push("Réinstaller l'application ou vider le stockage si le problème persiste.");
     }
+  }
 
-    // 2. Vérification Connectivité Supabase
+  private async checkNetwork(result: DiagnosticResult) {
     try {
       const { error } = await supabase.from('app_settings').select('count', { count: 'exact', head: true });
       if (error) throw error;
@@ -76,15 +103,24 @@ export class DiagnosticService {
     } catch (e: any) {
       result.errors.push(`NETWORK_SUPABASE_ERROR: ${e.message}`);
       // On ne met pas en 'error' car l'app doit fonctionner offline
-      result.status = result.status === 'error' ? 'error' : 'warning';
+      if (result.status !== 'error') result.status = 'warning';
+      result.recommendations.push("Vérifiez votre connexion internet pour la synchronisation des données.");
+    }
+  }
+
+  private async checkAuthAndProfile(result: DiagnosticResult) {
+    const user = useAuthStore.getState().user;
+    if (!user) {
+      result.errors.push("AUTH_MISSING: Aucun utilisateur connecté.");
+      if (result.status !== 'error') result.status = 'warning';
+      return;
     }
 
-    // 3. Vérification Auth & Profil (Anticipation FK Violations)
-    const user = useAuthStore.getState().user;
-    if (user) {
-      result.checks.auth = true;
-      try {
-        // Tenter de récupérer le profil
+    result.checks.auth = true;
+    
+    try {
+      // Vérification Profile (Supabase)
+      if (result.checks.network) {
         const { data: profile, error: pErr } = await supabase
           .from('profiles')
           .select('id')
@@ -92,71 +128,173 @@ export class DiagnosticService {
           .single();
 
         if (pErr || !profile) {
-          console.warn('🛠 Auto-Healing: Profil manquant détecté. Création en cours...');
-          // Réparation automatique
-          const { error: insErr } = await supabase.from('profiles').upsert({
-            id: user.id,
-            full_name: user.full_name || 'Voyageur',
-            xp: user.xp || 0,
-            level: user.level || 1
-          });
-          if (insErr) throw insErr;
-          console.log('✅ Profil réparé.');
+          await this.repairProfile(user);
+          result.checks.profile = true;
+        } else {
+          result.checks.profile = true;
         }
+      } else {
+        // Mode Offline: On fait confiance au store local
         result.checks.profile = true;
+        result.recommendations.push("Profil vérifié localement (Mode Offline).");
+      }
 
-        // Tenter de vérifier la progression
+      // Vérification Progression (Supabase)
+      if (result.checks.network) {
         const { data: progress, error: prgErr } = await supabase
           .from('player_city_progress')
           .select('id')
           .eq('player_id', user.id);
 
         if (!prgErr && (!progress || progress.length === 0)) {
-          console.warn('🛠 Auto-Healing: Progression manquante. Initialisation...');
-          // On laisse usePlayerCityProgress le faire ou on peut le centraliser ici
-          // Pour l'anticipation, on va juste logger le besoin
-          result.status = result.status === 'error' ? 'error' : 'warning';
-          result.errors.push('PROGRESS_MISSING: Le joueur n\'a pas de progression initialisée.');
-        } else {
-          result.checks.curriculum = true; // On réutilise curriculum ou on ajoute une clé
+          result.errors.push('PROGRESS_MISSING: Aucune progression sur le cloud.');
+          result.recommendations.push("La progression sera initialisée automatiquement au premier défi.");
         }
-      } catch (e: any) {
-        result.errors.push(`PROFILE_INTEGRITY_ERROR: ${e.message}`);
-        result.status = 'error';
       }
+    } catch (e: any) {
+      result.errors.push(`PROFILE_INTEGRITY_ERROR: ${e.message}`);
+      if (result.status !== 'error') result.status = 'warning';
     }
+  }
 
-    // 4. Vérification Données de Jeu (Curriculum)
+  private async repairProfile(user: any) {
+    console.warn('🛠 Auto-Healing: Réparation du profil...');
+    try {
+      const { error } = await supabase.from('profiles').upsert({
+        id: user.id,
+        full_name: user.full_name || 'Voyageur',
+        xp: user.xp || 0,
+        level: user.level || 1
+      });
+      if (error) throw error;
+      console.log('✅ Profil réparé à distance.');
+    } catch (e) {
+      console.error('❌ Échec de la réparation du profil:', e);
+    }
+  }
+
+  private async checkCurriculumAndConsistency(result: DiagnosticResult) {
     try {
       const challenges = await dbService.getChallenges();
       if (challenges.length === 0) {
         result.errors.push('CURRICULUM_EMPTY: Aucune donnée locale.');
-        result.status = result.status === 'error' ? 'error' : 'warning';
+        result.status = 'error';
+        result.recommendations.push("Une synchronisation complète est requise (Menu Paramètres > Sync).");
       } else {
         result.checks.curriculum = true;
+        
+        // Vérification de la cohérence entre challenges et progression locale
+        const progression = await dbService.getCitiesProgression();
+        if (progression.length < challenges.length) {
+          result.errors.push('CONSISTENCY_ERROR: Progression locale incomplète.');
+          result.recommendations.push("Lancer une réparation de la progression.");
+          await this.repairLocalConsistency(challenges, progression);
+          result.checks.consistency = true;
+        } else {
+          result.checks.consistency = true;
+        }
       }
     } catch (e: any) {
       result.errors.push(`DATA_QUERY_ERROR: ${e.message}`);
     }
-
-    this.reportToTerminal(result);
-    return result;
   }
 
-    console.log(`--------------------------------\n`);
+  private async repairLocalConsistency(challenges: any[], progression: any[]) {
+    console.warn('🛠 Auto-Healing: Réparation de la cohérence locale...');
+    try {
+      const missingCities = challenges.filter(c => !progression.find(p => p.id === c.city_id));
+      if (missingCities.length > 0) {
+        // Initialiser les entrées manquantes dans city_progression
+        await dbService.savePlayerProgress(missingCities.map(c => ({
+          city_id: c.city_id,
+          city_name_fr: c.city_name_fr,
+          status: 'locked'
+        })));
+        console.log(`✅ ${missingCities.length} villes ajoutées à la progression.`);
+      }
+    } catch (e) {
+      console.error('❌ Échec de la réparation de cohérence:', e);
+    }
+  }
+
+  private async checkSyncStaleness(result: DiagnosticResult) {
+    try {
+      const lastSync = await dbService.getLastSync();
+      const now = Date.now();
+      const diffHours = (now - lastSync) / (1000 * 60 * 60);
+
+      if (lastSync === 0) {
+        result.errors.push('SYNC_NEVER: Jamais synchronisé.');
+        if (result.status !== 'error') result.status = 'warning';
+      } else if (diffHours > 48) {
+        result.errors.push(`SYNC_STALE: Données vieilles de ${Math.round(diffHours)}h.`);
+        if (result.status !== 'error') result.status = 'warning';
+        result.recommendations.push("Pensez à synchroniser vos données pour avoir les derniers défis.");
+      } else {
+        result.checks.sync = true;
+      }
+    } catch (e: any) {
+      result.errors.push(`SYNC_CHECK_ERROR: ${e.message}`);
+    }
+  }
+
+  private reportToTerminal(result: DiagnosticResult) {
+    const emoji = result.status === 'ok' ? '🟩' : result.status === 'warning' ? '🟧' : '🟥';
+    
+    console.log(`\n${emoji} --- RAPPORT DE SANTÉ APPLICATION --- ${emoji}`);
+    console.log(`Statut Global: ${result.status.toUpperCase()}`);
+    console.log(`-------------------------------------------`);
+    
+    const rows = [
+      { label: 'Système de Fichiers (DB)', ok: result.checks.database },
+      { label: 'Connexion Supabase    ', ok: result.checks.network },
+      { label: 'Authentification      ', ok: result.checks.auth },
+      { label: 'Intégrité du Profil   ', ok: result.checks.profile },
+      { label: 'Contenu Pédagogique   ', ok: result.checks.curriculum },
+      { label: 'Cohérence des Données ', ok: result.checks.consistency },
+      { label: 'Fraîcheur des Données ', ok: result.checks.sync },
+    ];
+
+    rows.forEach(row => {
+      console.log(`${row.ok ? '✅' : '❌'} ${row.label}`);
+    });
+
+    if (result.errors.length > 0) {
+      console.log(`\n⚠️  Détails techniques :`);
+      result.errors.forEach(err => console.log(`   • ${err}`));
+    }
+
+    if (result.recommendations.length > 0) {
+      console.log(`\n💡 Actions recommandées :`);
+      result.recommendations.forEach(rec => console.log(`   → ${rec}`));
+    }
+    
+    console.log(`-------------------------------------------\n`);
   }
 
   private async trackCrashes(): Promise<number> {
     try {
+      const lastCrashTimeStr = await AsyncStorage.getItem('app_last_crash_time');
+      const lastCrashTime = lastCrashTimeStr ? parseInt(lastCrashTimeStr, 10) : 0;
+      const now = Date.now();
+      
       const countStr = await AsyncStorage.getItem('app_crash_count');
       let count = countStr ? parseInt(countStr, 10) : 0;
+      
+      // Si le dernier crash date de plus d'une heure, on reset le compteur
+      // Cela évite de déclencher le nettoyage d'urgence pour des crashs très espacés
+      if (now - lastCrashTime > 3600000) {
+        count = 0;
+      }
+      
       count++;
       await AsyncStorage.setItem('app_crash_count', count.toString());
+      await AsyncStorage.setItem('app_last_crash_time', now.toString());
       
-      // Si l'app reste ouverte plus de 10s, on reset le compteur (considéré comme succès)
+      // Si l'app reste ouverte plus de 15s sans crash, on considère le démarrage comme réussi
       setTimeout(async () => {
         await AsyncStorage.setItem('app_crash_count', '0');
-      }, 10000);
+      }, 15000);
       
       return count;
     } catch {
@@ -166,10 +304,8 @@ export class DiagnosticService {
 
   private async emergencyCleanUp() {
     try {
-      // Nettoyer les caches SQLite corrompus si nécessaire
-      // await dbService.reset(); // Trop dangereux par défaut, on peut juste vider le cache de sync
       await AsyncStorage.removeItem('last_sync_timestamp');
-      console.log('🧹 Nettoyage d\'urgence terminé.');
+      console.log('🧹 Nettoyage d\'urgence: Cache de synchronisation réinitialisé.');
     } catch (e) {
       console.error('Failed emergency cleanup', e);
     }

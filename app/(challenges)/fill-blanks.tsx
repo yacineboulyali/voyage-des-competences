@@ -126,7 +126,7 @@ export default function V1FillBlanksScreen() {
             const selection = selections[currentBlank];
             return (
               <View key={i} style={[styles.blank, { backgroundColor: selection ? colors.primary : colors.surface, borderColor: selection ? colors.primary : colors.border }]}>
-                <Text style={[styles.blankText, { color: selection ? '#fff' : colors.primary }]}>{selection || ""}</Text>
+                <Text style={[styles.blankText, { color: selection ? '#fff' : colors.onSurface }]}>{selection || ""}</Text>
               </View>
             );
           }
@@ -146,7 +146,7 @@ export default function V1FillBlanksScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View entering={FadeInDown.delay(200)} style={styles.header}>
-          <Text style={[styles.instruction, { color: colors.onSurfaceVariant }]}>COMPLÉTER LES BLANCS</Text>
+          <Text style={[styles.instruction, { color: colors.onSurface }]}>COMPLÉTER LES BLANCS</Text>
           <View style={styles.sentencesBox}>
             {renderSentence(partsFr)}
             {partsAr.length > 0 && <View style={{ height: 20 }} />}

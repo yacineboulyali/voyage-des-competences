@@ -223,8 +223,8 @@ export default function TimeAttackScreen() {
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.scoreContainer}>
-          <Text style={[styles.scoreLabel, { color: colors.onSurfaceVariant }]}>SCORE</Text>
-          <Text style={[styles.scoreValue, { color: colors.primary }]}>{score}</Text>
+          <Text style={[styles.scoreLabel, { color: colors.onSurface }]}>SCORE</Text>
+          <Text style={[styles.scoreValue, { color: colors.onSurface }]}>{score}</Text>
         </View>
 
         <Animated.Text style={[styles.timer, timerStyle]}>
@@ -232,7 +232,7 @@ export default function TimeAttackScreen() {
         </Animated.Text>
 
         <View style={[styles.targetCard, { backgroundColor: colors.surface, borderColor: targetPattern.color }]}>
-          <Text style={[styles.targetLabel, { color: colors.onSurfaceVariant }]}>TROUVEZ CELUI-CI :</Text>
+          <Text style={[styles.targetLabel, { color: colors.onSurface }]}>TROUVEZ CELUI-CI :</Text>
           <MaterialIcons name={targetPattern.icon as any} size={80} color={targetPattern.color} />
         </View>
 

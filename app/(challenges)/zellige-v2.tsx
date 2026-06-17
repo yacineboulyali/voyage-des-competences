@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#2D6B5A', // Vert Zellige
+    color: colors.onSurface,
     letterSpacing: 1,
   },
   subtitle: {
     fontSize: 15,
-    color: '#666',
+    color: colors.onSurface,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   patternName: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#2D6B5A',
+    color: colors.onSurface,
   },
   illustrationBox: {
     marginTop: 40,

@@ -166,7 +166,7 @@ const OctagonBadge = ({ badge, size = 80, isLarge = false, onPress }: { badge: B
             <MaterialIcons 
               name={badge.icon as any} 
               size={size * 0.56} 
-              color={unlocked ? (isLarge ? '#1A3D2E' : colors.primary) : '#BDBDBD'} 
+              color={unlocked ? (isLarge ? '#000000' : colors.onSurface) : '#BDBDBD'} 
             />
           )}
         </View>
@@ -205,7 +205,7 @@ const BadgeSection = ({ title, arabicTitle, badges, color, onSelect }: { title: 
     >
       <View style={styles.sectionHeader}>
         <View style={[styles.sectionLine, { backgroundColor: color }]} />
-        <Text style={[styles.sectionTitle, { color }]}>{title.toUpperCase()} • {arabicTitle}</Text>
+        <Text style={[styles.sectionTitle, { color: colors.onSurface }]}>{title.toUpperCase()} • {arabicTitle}</Text>
         <View style={[styles.sectionLine, { backgroundColor: color }]} />
       </View>
       
@@ -319,7 +319,7 @@ export default function BadgesScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View entering={FadeInUp.duration(800)} style={styles.header}>
-          <Text style={[styles.title, { color: colors.primary }]}>Collection de Badges</Text>
+          <Text style={[styles.title, { color: colors.onSurface }]}>Collection de Badges</Text>
           <Text style={[styles.subtitle, { color: colors.onSurfaceVariant }]}>مجموعة الشارات</Text>
           <View style={[styles.titleUnderline, { backgroundColor: colors.gold }]} />
         </Animated.View>
@@ -403,7 +403,7 @@ export default function BadgesScreen() {
               <OctagonBadge badge={selectedBadge!} size={160} isLarge />
             </Animated.View>
 
-            <Text style={[styles.popupTitle, { color: colors.primary }]}>{selectedBadge?.name}</Text>
+            <Text style={[styles.popupTitle, { color: colors.onSurface }]}>{selectedBadge?.name}</Text>
             <Text style={[styles.popupSubtitle, { color: colors.onSurfaceVariant }]}>{selectedBadge?.arabicName}</Text>
             
             <View style={styles.rarityBadge}>
